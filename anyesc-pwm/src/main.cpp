@@ -13,7 +13,7 @@ void setup() {
   digitalWrite(1, HIGH);
   pinMode(2, OUTPUT);
   digitalWrite(2, HIGH);
-  
+
 
   // Initialize thruster
   servo.attach(pwm_pin);
