@@ -18,7 +18,7 @@ void setup(void)
   // start serial port
   Serial.begin(115200);
   Serial.println("Dallas Temperature IC Control Library Demo");
-  MySerial0.begin(9600, SERIAL_8N1, -1, -1);
+  MySerial0.begin(115200, SERIAL_8N1, -1, -1);
   MySerial0.print("MySerial0");
 
   // Start up the library
