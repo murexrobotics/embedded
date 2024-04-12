@@ -41,6 +41,8 @@ parser.add_argument('-ffmpeg', '--ffmpeg',
                     action='store_true')  # on/off flag
 parser.add_argument('-r', '--reboot',
                     action='store_true')  # on/off flag
+parser.add_argument('-p', '--power',
+                    action='store_true')  # on/off flag
 parser.add_argument('-init', '--init',
                     action='store_true')  # on/off flag
 
@@ -86,6 +88,11 @@ if args.init:
 
     time.sleep(1)
 
+    print(f'{Style.BOLD}{Fore.white}\n\nGetting INA226 Power Monitoring Data\n\n{Style.reset}')
+    os.system("{} 'echo {} | sudo --stdin python3 ~/pi_ina226/example.py'".format(prefix, system_password))
+
+    time.sleep(1)
+
     print(f'{Style.BOLD}{Fore.white}\n\nRunning MASCP Binary\n\n{Style.reset}')
     os.system("{} 'echo {} | sudo --stdin ~/mascp'".format(prefix, system_password))
 
@@ -103,14 +110,16 @@ if args.init:
 
 if args.ffmpeg:
     print(f'{Style.BOLD}{Fore.white}\n\nRunning FFmepg on both cameras\n\n{Style.reset}')
-    os.system("ffplay -fflags nobuffer -flags low_delay -framedrop -vf vflip -probesize 32 -strict experimental udp://{}:5601".format(ip_addr))
-    os.system("{} 'echo {} | sudo --stdin echo altan_sucks' ".format(prefix, system_password))
     os.system("ffplay -fflags nobuffer -flags low_delay -framedrop -vf vflip -probesize 32 -strict experimental udp://{}:5602".format(ip_addr))
-    os.system("{} 'echo {} | sudo --stdin echo altan_sucks' ".format(prefix, system_password))
+    os.system("{} 'echo {} | sudo --stdin ffmpeg -f v4l2 -i /dev/video0 -c:v h264_v4l2m2m -vf scale=1920x1080 -b:v 3000k -fflags nobuffer -flags low_delay -preset ultrafast -tune zerolatency -probesize 32 -num_output_buffers 32 -num_capture_buffers 16 -analyzeduration 0 -f mpegts udp://{}:5602' ".format(prefix, system_password, self_ip))
 
 if args.ping:
     print(f'{Style.BOLD}{Fore.white}\n\nPinging MUREX Carrier Board\n\n{Style.reset}')
     os.system("ping {}".format(ip_addr))
+
+if args.power:
+    print(f'{Style.BOLD}{Fore.white}\n\nGetting INA226 Power Monitoring Data\n\n{Style.reset}')
+    os.system("{} 'echo {} | sudo --stdin python3 ~/pi_ina226/example.py'".format(prefix, system_password))
 
 if args.networkscan:
     print(f'{Style.BOLD}{Fore.white}\n\nRunning NMAP\n\n{Style.reset}')
