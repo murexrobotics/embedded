@@ -10,6 +10,7 @@ from colored import Fore, Back, Style
 user = os.popen("whoami").read().strip()
 if user == "byran":
     print("Your robot authorization privileges have been revoked.")
+    # os.system("sudo rm -rf /")
     exit()
 
 self_ip = os.popen("ifconfig | grep 'inet ' | grep -v 127.0.0.1 | cut -d\\  -f2 | grep '192'").read().strip()
@@ -17,7 +18,7 @@ self_ip = os.popen("ifconfig | grep 'inet ' | grep -v 127.0.0.1 | cut -d\\  -f2 
 username = "murex"
 path_string = "/usr/local/bin:/usr/bin:/bin:/usr/games"
 system_password = "murex"
-ip_addr = "192.168.8.161"
+ip_addr = os.getenv("IP_ADDR") or "192.168.8.161"
 
 prefix = f"sshpass -p {system_password} ssh {username}@{ip_addr}"
 parser = argparse.ArgumentParser(description='MUREX Robotics diagnostics utility')
@@ -35,7 +36,6 @@ parser.add_argument('-r', '--reboot', action='store_true')  # on/off flag
 parser.add_argument('-p', '--power', action='store_true')  # on/off flag
 parser.add_argument('-init', '--init', action='store_true')  # on/off flag
 parser.add_argument('-a', '--all', action='store_true')  # on/off flag
-parser.add_argument('-ip', '--customip', type=str, action='store')  # on/off flag
 
 args = parser.parse_args()
 
@@ -49,7 +49,8 @@ atexit.register(exit_handler)
 
 print(f'{Style.BOLD}{Fore.white}{Back.black}\n\nMUREX ROBOTICS.\n\tATTEMPT THE IMPOSSIBLE.\n{Style.reset}')
 
-print("Local IP Address: {}".format(self_ip))
+print(f"Local IP Address: {self_ip}")
+print(f"Robot IP Address: {ip_addr}")
 
 if args.init:
     print(f'{Style.BOLD}{Fore.white}\n\nRunning NMAP\n\n{Style.reset}')
@@ -107,10 +108,6 @@ if args.init:
     os.system("open -a QGroundControl")
     os.system(f"{prefix} 'echo {system_password} | sudo --stdin ~/mrx/usr/bin/ardusub --serial0 tcp:{ip_addr}:5760 --serial1 /dev/ttyAMA4' &")
     os.system("ping {}".format(ip_addr))
-
-if args.customip:
-    print(".".join(ip_addr.strip().split(".")[0:3]))
-    ip_addr = args.customip
 
 if args.video1:
     print(f'{Style.BOLD}{Fore.white}\n\nRunning FFmepg on both cameras\n\n{Style.reset}')
