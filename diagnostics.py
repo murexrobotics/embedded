@@ -10,7 +10,6 @@ from colored import Fore, Back, Style
 user = os.popen("whoami").read().strip()
 if user == "byran":
     print("Your robot authorization privileges have been revoked.")
-    # os.system("sudo rm -rf /")
     exit()
 
 self_ip = os.popen("ifconfig | grep 'inet ' | grep -v 127.0.0.1 | cut -d\\  -f2 | grep '192'").read().strip()
@@ -111,14 +110,14 @@ if args.init:
 
 if args.video1:
     print(f'{Style.BOLD}{Fore.white}\n\nRunning FFmepg on both cameras\n\n{Style.reset}')
-    os.system(f"{prefix} 'ffmpeg -f v4l2 -i /dev/video0 -c:v h264_v4l2m2m -vf \"hflip,format=yuv420p,scale=1920x1080\" -b:v 9000k -fflags nobuffer -flags low_delay -preset ultrafast -tune zerolatency -probesize 32 -num_output_buffers 32 -num_capture_buffers 16 -analyzeduration 0 -f mpegts udp://{self_ip}:5600'")
+    os.system(f"{prefix} 'ffmpeg -f v4l2 -i /dev/video0 -c:v h264_v4l2m2m -vf \"hflip,format=yuv420p,scale=1920x1080\" -b:v 2000k -fflags nobuffer -flags low_delay -preset ultrafast -tune zerolatency -probesize 32 -num_output_buffers 32 -num_capture_buffers 16 -analyzeduration 0 -f mpegts udp://{self_ip}:5600'")
     os.system(f"ffplay -fflags nobuffer -flags low_delay -framedrop -vf vflip -probesize 32 -strict experimental udp://{ip_addr}:5600")
 
 if args.video2:
     print(f'{Style.BOLD}{Fore.white}\n\nRunning FFmepg on both cameras\n\n{Style.reset}')
-    os.system(f"{prefix} 'ffmpeg -f v4l2 -i /dev/video2 -c:v h264_v4l2m2m -vf \"hflip,format=yuv420p,scale=720x1280\" -b:v 9000k -fflags nobuffer -flags low_delay -preset ultrafast -tune zerolatency -probesize 32 -num_output_buffers 32 -num_capture_buffers 16 -analyzeduration 0 -f mpegts udp://{self_ip}:5601'")
+    os.system(f"{prefix} 'ffmpeg -f v4l2 -i /dev/video2 -c:v h264_v4l2m2m -vf \"hflip,format=yuv420p,scale=720x1280\" -b:v 2000k -fflags nobuffer -flags low_delay -preset ultrafast -tune zerolatency -probesize 32 -num_output_buffers 32 -num_capture_buffers 16 -analyzeduration 0 -f mpegts udp://{self_ip}:5601'")
     os.system(f"ffplay -fflags nobuffer -flags low_delay -framedrop -vf vflip -probesize 32 -strict experimental udp://{ip_addr}:5601")
-    
+
 if args.ping:
     print(f'{Style.BOLD}{Fore.white}\n\nPinging MUREX Carrier Board\n\n{Style.reset}')
     os.system(f"ping {ip_addr}")
