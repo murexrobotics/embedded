@@ -25,7 +25,7 @@ print("Number of axis:")
 print(controller.get_numaxes())
 
 # Create the connection
-master = mavutil.mavlink_connection('udpin:0.0.0.0:14550')
+master = mavutil.mavlink_connection('udpin:0.0.0.0:14551')
 # Wait a heartbeat before sending commands
 master.wait_heartbeat()
 
@@ -57,8 +57,9 @@ while True:
     # Print the values for the axes
     pygame.event.pump()
 
-    left_trigger = int(200*((controller.get_axis(4) / 2) + 0.5) + 1400)
-    right_trigger = int(200*((controller.get_axis(5) / 2) + 0.5) + 1400)
+    left_trigger = int(400*((controller.get_axis(4) / 2) + 0.5) + 1300)
+    right_trigger = int(400*((controller.get_axis(5) / 2) + 0.5) + 1300)
 
     set_rc_channel_pwm(12, left_trigger)
     set_rc_channel_pwm(13, right_trigger)
+    time.sleep(0.01)

@@ -106,7 +106,7 @@ if args.init:
 
     print(f'{Style.BOLD}{Fore.white}\n\nRunning Ardusub Binary\n\n{Style.reset}')
     os.system("open -a QGroundControl")
-    os.system(f"{prefix} 'echo {system_password} | sudo --stdin ~/mrx/usr/bin/ardusub --serial0 tcp:{ip_addr}:5760 --serial1 /dev/ttyAMA4' &")
+    os.system(f"{prefix} 'echo {system_password} | sudo --stdin ./mrx/usr/bin/ardusub --serial0  tcp:{ip_addr}:5760 --serial1 /dev/ttyAMA4 --serial2 udp:{".".join(ip_addr.strip().split(".")[0:3])}.255:14551:bcast' &")
     os.system("ping {}".format(ip_addr))
 
 if args.video1:
@@ -173,7 +173,7 @@ if args.i2cscan:
 if args.ardupilot:
     print(f'{Style.BOLD}{Fore.white}\n\nRunning Ardusub Binary\n\n{Style.reset}')
     os.system("open -a QGroundControl")
-    os.system(f"{prefix} 'echo {system_password} | sudo --stdin ~/mrx/usr/bin/ardusub --serial0 tcp:{ip_addr}:5760 --serial1 /dev/ttyAMA4' ")
+    os.system(f"{prefix} 'echo {system_password} | sudo --stdin ./mrx/usr/bin/ardusub --serial0  tcp:{ip_addr}:5760 --serial1 /dev/ttyAMA4 --serial2 udp:{".".join(ip_addr.strip().split(".")[0:3])}.255:14551:bcast' ")
 
 if args.usb3:
     print(f'{Style.BOLD}{Fore.white}\n\nInitializing uPD720202\n\n{Style.reset}')

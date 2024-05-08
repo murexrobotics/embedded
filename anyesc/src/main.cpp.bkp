@@ -1,21 +1,19 @@
+// Firmware for Servo Pico
+
 #include <Servo.h>
 #include <Arduino.h>
 
 // ------ DO NOT CHANGE THESE VALUES -------
-#define S1_PWM_PIN 3
-#define S2_PWM_PIN 4
-
+#define PWM_PIN 3
 #define ALL_CALL_ADDRESS 48
 
 // -- Update for each individual thruster --
 #define ADDRESS 57
-#define ADDRESS2 58
 
 // ---- Uncomment to enable debug mode -----
-#define DEBUG
+// #define DEBUG
 
-Servo servo1;
-Servo servo2;
+Servo thruster;
 
 void setup() {
   /// ANYESC MASCP CODE
@@ -40,18 +38,13 @@ void setup() {
     Serial.print("\n");
   #endif
 
-  servo1.attach(S1_PWM_PIN);
-  servo1.writeMicroseconds(1060);
-  servo2.attach(S2_PWM_PIN);
-  servo2.writeMicroseconds(500);
-
-  servo2.attach(S2_PWM_PIN);
-  // delay(7000); // wait for ESC to initialize
+  thruster.attach(PWM_PIN);
+  thruster.writeMicroseconds(1500);
+  delay(7000); // wait for ESC to initialize
 
   #ifdef DEBUG
     Serial.print("Finished Initializing Thruster");
   #endif
-
 
   // Turn on LED to indicate finished initialization
   digitalWrite(0, HIGH);
@@ -79,23 +72,11 @@ void loop() {
       digitalWrite(2, HIGH);
       
       int pulse = map(throttle, 0, 255, 500, 2500);
-      // if (throttle == 127) { pulse = 1500; } // Deadzone
+      thruster.writeMicroseconds(pulse);
 
       #ifdef DEBUG
         Serial.print(pulse);
       #endif
-
-      servo1.writeMicroseconds(pulse);
-    } else if (address == ADDRESS2) {
-      // Turn on LED to indicate that MASCP is working
-      digitalWrite(2, HIGH);
-      int pulse = map(throttle, 0, 255, 500, 2500);
-
-      #ifdef DEBUG
-        Serial.print(pulse);
-      #endif
-
-      servo2.writeMicroseconds(pulse);
     }
   }
 }
